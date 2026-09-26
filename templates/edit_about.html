@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit About</title>
+</head>
+<body>
+
+    <h1>Edit About</h1>
+
+    <form action="/update-about-form/{{ about.id }}" method="POST">
+
+        <textarea name="content" required>{{ about.content }}</textarea>
+
+        <br><br>
+
+        <button type="submit">
+            Update About
+        </button>
+
+    </form>
+
+    <br>
+
+    <a href="/admin">Back to Admin</a>
+
+</body>
+</html>

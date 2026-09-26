@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Panel</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <h1>Admin Panel</h1>
+
+    <h2>Add Skill</h2>
+   <form action="/add-skill-form" method="POST">
+    <input type="text" name="name" placeholder="Enter Skill">
+    <button type="submit">Add Skill</button>
+</form>
+
+    <h2>Add Project</h2>
+   <form action="/add-project-form" method="POST" enctype="multipart/form-data">
+
+    <input type="text" name="title" placeholder="Project Title"><br><br>
+
+    <textarea name="description" placeholder="Project Description"></textarea><br><br>
+
+    <input type="file" name="image"><br><br>
+
+    <button type="submit">Add Project</button>
+
+</form>
+
+<h2>Add About</h2>
+
+<form action="/add-about-form" method="POST">
+
+    <textarea name="content"
+              placeholder="Write About Yourself"></textarea>
+
+    <br><br>
+
+    <button type="submit">Add About</button>
+
+</form>
+
+<h2>Current Skills</h2>
+<ul>
+    {% for skill in skills %}
+        <li>
+            {{ skill.name }}
+
+            <a href="/edit-skill/{{ skill.id }}">✏️ Edit</a>
+
+            <a href="/delete-skill-ui/{{ skill.id }}">🗑️ Delete</a>
+        </li>
+    {% endfor %}
+</ul>
+
+<h2>Current Projects</h2>
+<ul>
+    {% for project in projects %}
+        <li>
+            <b>{{ project.title }}</b><br>
+            {{ project.description }}
+            
+             <br><br>
+
+            {% if project.image %}
+            <img src="{{ url_for('static', filename='uploads/' + project.image) }}"
+            width="200">
+{% endif %}
+<br><br>
+
+            <a href="/edit-project/{{ project.id }}">✏️ Edit</a>
+
+            <a href="/delete-project-ui/{{ project.id }}">🗑️ Delete</a>
+        </li>
+    {% endfor %}
+</ul>
+<h2>Current About</h2>
+
+<ul>
+    {% for about in abouts %}
+        <li>
+            {{ about.content }}
+
+            <a href="/edit-about/{{ about.id }}">
+                ✏️ Edit
+            </a>
+
+            <a href="/delete-about-ui/{{ about.id }}">
+                🗑️ Delete
+            </a>
+        </li>
+    {% endfor %}
+</ul>

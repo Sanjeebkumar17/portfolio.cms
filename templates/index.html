@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Portfolio</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <h1>My Portfolio</h1>
+    
+    <div class="navbar">
+    <a href="#about">About</a>
+    <a href="#skills">Skills</a>
+    <a href="#projects">Projects</a>
+</div>
+
+    <div class="hero">
+    <h1>Sanjeeb Kumar Giri</h1>
+    <p>Python Developer | Flask Developer | Student</p>
+</div>
+
+    <a href="/admin" class="admin-btn">Go to Admin Panel</a>
+<hr>
+<h2 id="about">About Me</h2>>
+
+{% for about in abouts %}
+    <p>{{ about.content }}</p>
+{% endfor %}
+    <h2 id="skills">Skills</h2>
+    <ul>
+        {% for skill in skills %}
+            <li>{{ skill.name }}</li>
+        {% endfor %}
+    </ul>
+
+<h2 id="projects">Projects</h2>
+
+<ul>
+    {% for project in projects %}
+    <li class="project-card">
+
+        <b>{{ project.title }}</b><br><br>
+
+        {{ project.description }}
+
+        <br><br>
+
+        {% if project.image %}
+            <img src="{{ url_for('static', filename='uploads/' + project.image) }}"
+                 width="250">
+        {% endif %}
+
+    </li>
+    {% endfor %}
+</ul>    
+
+<hr>
+
+<footer>
+    <p>© 2026 Sanjeeb Kumar Giri | Portfolio Website</p>
+</footer>
+
+</body>
+</html>

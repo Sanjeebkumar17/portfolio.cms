@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Skill</title>
+</head>
+<body>
+
+    <h1>Edit Skill</h1>
+
+    <form action="/update-skill-form/{{ skill.id }}" method="POST">
+
+        <input type="text"
+               name="name"
+               value="{{ skill.name }}"
+               required>
+
+        <button type="submit">
+            Update Skill
+        </button>
+
+    </form>
+
+    <br>
+
+    <a href="/admin">Back to Admin</a>
+
+</body>
+</html>
