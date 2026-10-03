@@ -1,9 +1,10 @@
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect,session
 from werkzeug.utils import secure_filename
 import os
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
+app.secret_key="mysecretkey"
 
 app.config["UPLOAD_FOLDER"] = "static/uploads"
 
@@ -11,24 +12,72 @@ app.config["UPLOAD_FOLDER"] = "static/uploads"
 def home():
     skills = Skill.query.all()
     projects = Project.query.all()
+    abouts = About.query.all()
+    blogs = Blog.query.all()
+    experiences = Experience.query.all()
+    testimonials = Testimonial.query.all()
+    services = Service.query.all()
 
     return render_template(
         "index.html",
         skills=skills,
-        projects=projects
+        projects=projects,
+        abouts=abouts,
+        blogs=blogs,
+        experiences=experiences,
+        testimonials=testimonials,
+        services=services
     )
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+
+    if request.method == "POST":
+
+        username = request.form["username"]
+        password = request.form["password"]
+
+        admin = Admin.query.filter_by(
+            username=username,
+            password=password
+        ).first()
+
+        if admin:
+            session["admin"] = admin.username
+            return redirect("/admin")
+
+        return "Invalid Username or Password"
+
+    return render_template("login.html")
+
+@app.route("/logout")
+def logout():
+    session.pop("admin", None)
+    return redirect("/login")
 
 @app.route("/admin")
 def admin():
+    if "admin" not in session:
+        return redirect("/login")
     skills = Skill.query.all()
     projects = Project.query.all()
     abouts = About.query.all()
+    blogs = Blog.query.all()
+    experiences = Experience.query.all()
+    testimonials = Testimonial.query.all()
+    services = Service.query.all()
+    contacts = Contact.query.all()
 
     return render_template(
         "admin.html",
         skills=skills,
         projects=projects,
-        abouts=abouts
+        abouts=abouts,
+        blogs=blogs,
+        experiences=experiences,
+        testimonials=testimonials,
+        services=services,
+        contacts = contacts
     )
 
 @app.route("/add-skill-form", methods=["POST"])
@@ -76,6 +125,85 @@ def add_about_form():
 
     return redirect("/admin")
 
+@app.route("/add-blog-form", methods=["POST"])
+def add_blog_form():
+    title = request.form["title"]
+    content = request.form["content"]
+
+    blog = Blog(
+        title=title,
+        content=content
+    )
+
+    db.session.add(blog)
+    db.session.commit()
+
+    return redirect("/admin")
+
+@app.route("/add-experience-form", methods=["POST"])
+def add_experience_form():
+
+    company = request.form["company"]
+    role = request.form["role"]
+    description = request.form["description"]
+
+    experience = Experience(
+        company=company,
+        role=role,
+        description=description
+    )
+
+    db.session.add(experience)
+    db.session.commit()
+
+    return redirect("/admin")
+
+@app.route("/add-testimonial-form", methods=["POST"])
+def add_testimonial_form():
+
+    name = request.form["name"]
+    feedback = request.form["feedback"]
+
+    testimonial = Testimonial(
+        name=name,
+        feedback=feedback
+    )
+
+    db.session.add(testimonial)
+    db.session.commit()
+
+    return redirect("/admin")
+
+
+@app.route("/add-service-form", methods=["POST"])
+def add_service_form():
+
+    title = request.form["title"]
+    description = request.form["description"]
+
+    service = Service(
+        title=title,
+        description=description
+    )
+
+    db.session.add(service)
+    db.session.commit()
+
+    return redirect("/admin")
+
+    name = request.form["name"]
+    feedback = request.form["feedback"]
+
+    testimonial = Testimonial(
+        name=name,
+        feedback=feedback
+    )
+
+    db.session.add(testimonial)
+    db.session.commit()
+
+    return redirect("/admin")
+
 @app.route("/delete-skill-ui/<int:id>")
 def delete_skill_ui(id):
     skill = Skill.query.get(id)
@@ -108,6 +236,81 @@ def delete_about_ui(id):
 
     if about:
         db.session.delete(about)
+        db.session.commit()
+
+    return redirect("/admin")
+
+@app.route("/delete-blog-ui/<int:id>")
+def delete_blog_ui(id):
+    blog = Blog.query.get(id)
+
+    if blog:
+        db.session.delete(blog)
+        db.session.commit()
+
+    return redirect("/admin")
+
+@app.route("/delete-experience-ui/<int:id>")
+def delete_experience_ui(id):
+    experience = Experience.query.get(id)
+
+    if experience:
+        db.session.delete(experience)
+        db.session.commit()
+
+    return redirect("/admin")
+
+@app.route('/edit-testimonial/<int:id>')
+def edit_testimonial(id):
+    testimonial = Testimonial.query.get(id)
+
+    if testimonial:
+        return render_template(
+            'edit_testimonial.html',
+            testimonial=testimonial
+        )
+
+    return "Testimonial not found"
+
+@app.route('/edit-service/<int:id>')
+def edit_service(id):
+    service = Service.query.get(id)
+
+    if service:
+        return render_template(
+            'edit_service.html',
+            service=service
+        )
+
+    return "Service not found"
+
+@app.route("/delete-testimonial-ui/<int:id>")
+def delete_testimonial_ui(id):
+    testimonial = Testimonial.query.get(id)
+
+    if testimonial:
+        db.session.delete(testimonial)
+        db.session.commit()
+
+    return redirect("/admin")
+
+@app.route("/delete-service-ui/<int:id>")
+def delete_service_ui(id):
+    service = Service.query.get(id)
+
+    if service:
+        db.session.delete(service)
+        db.session.commit()
+
+    return redirect("/admin")
+
+@app.route("/delete-contact-ui/<int:id>")
+def delete_contact_ui(id):
+
+    contact = Contact.query.get(id)
+
+    if contact:
+        db.session.delete(contact)
         db.session.commit()
 
     return redirect("/admin")
@@ -150,6 +353,35 @@ class Service(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(200))
     description = db.Column(db.String(1000))
+
+class Admin(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(100), unique=True)
+    password = db.Column(db.String(200))
+
+class Contact(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100))
+    email = db.Column(db.String(100))
+    message = db.Column(db.String(2000))
+
+@app.route("/contact", methods=["POST"])
+def contact():
+
+    name = request.form["name"]
+    email = request.form["email"]
+    message = request.form["message"]
+
+    contact = Contact(
+        name=name,
+        email=email,
+        message=message
+    )
+
+    db.session.add(contact)
+    db.session.commit()
+
+    return redirect("/")
 
 @app.route("/projects")
 def get_projects():
@@ -309,6 +541,24 @@ def edit_project(id):
 
     return "Project not found"
 
+@app.route('/edit-blog/<int:id>')
+def edit_blog(id):
+    blog = Blog.query.get(id)
+
+    if blog:
+        return render_template('edit_blog.html', blog=blog)
+
+    return "Blog not found"
+
+@app.route('/edit-experience/<int:id>')
+def edit_experience(id):
+    experience = Experience.query.get(id)
+
+    if experience:
+        return render_template('edit_experience.html', experience=experience)
+
+    return "Experience not found"
+
 @app.route('/update-about-form/<int:id>', methods=['POST'])
 def update_about_form(id):
     about = About.query.get(id)
@@ -326,6 +576,54 @@ def update_project_form(id):
     if project:
         project.title = request.form['title']
         project.description = request.form['description']
+        db.session.commit()
+
+    return redirect('/admin')
+
+@app.route('/update-blog-form/<int:id>', methods=['POST'])
+def update_blog_form(id):
+    blog = Blog.query.get(id)
+
+    if blog:
+        blog.title = request.form['title']
+        blog.content = request.form['content']
+        db.session.commit()
+
+    return redirect('/admin')
+
+@app.route('/update-experience-form/<int:id>', methods=['POST'])
+def update_experience_form(id):
+    experience = Experience.query.get(id)
+
+    if experience:
+        experience.company = request.form['company']
+        experience.role = request.form['role']
+        experience.description = request.form['description']
+
+        db.session.commit()
+
+    return redirect('/admin')
+    
+@app.route('/update-testimonial-form/<int:id>', methods=['POST'])
+def update_testimonial_form(id):
+    testimonial = Testimonial.query.get(id)
+
+    if testimonial:
+        testimonial.name = request.form['name']
+        testimonial.feedback = request.form['feedback']
+
+        db.session.commit()
+
+    return redirect('/admin')
+
+@app.route('/update-service-form/<int:id>', methods=['POST'])
+def update_service_form(id):
+    service = Service.query.get(id)
+
+    if service:
+        service.title = request.form['title']
+        service.description = request.form['description']
+
         db.session.commit()
 
     return redirect('/admin')

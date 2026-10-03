@@ -21,7 +21,7 @@
 
     <a href="/admin" class="admin-btn">Go to Admin Panel</a>
 <hr>
-<h2 id="about">About Me</h2>>
+<h2 id="about">About Me</h2>
 
 {% for about in abouts %}
     <p>{{ about.content }}</p>
@@ -52,9 +52,77 @@
 
     </li>
     {% endfor %}
-</ul>    
+</ul>
 
+<h2 id="blogs">Blogs</h2>
+
+<ul>
+    {% for blog in blogs %}
+        <li class="project-card">
+            <b>{{ blog.title }}</b>
+            <br><br>
+            {{ blog.content }}
+        </li>
+    {% endfor %}
+</ul>
+<h2>Experience</h2>
+
+{% for experience in experiences %}
+<div class="project-card">
+    <h3>{{ experience.company }}</h3>
+    <p>{{ experience.role }}</p>
+    <p>{{ experience.description }}</p>
+</div>
+{% endfor %}
+
+<h2>Testimonials</h2>
+
+{% for testimonial in testimonials %}
+<div class="project-card">
+    <h3>{{ testimonial.name }}</h3>
+    <p>{{ testimonial.feedback }}</p>
+</div>
+{% endfor %}
+
+<h2>Services</h2>
+
+{% for service in services %}
+<div class="project-card">
+    <h3>{{ service.title }}</h3>
+    <p>{{ service.description }}</p>
+</div>
+{% endfor %}
 <hr>
+
+<h2>Contact Me</h2>
+
+<form action="/contact" method="POST">
+
+    <input type="text"
+           name="name"
+           placeholder="Your Name"
+           required>
+
+    <br><br>
+
+    <input type="email"
+           name="email"
+           placeholder="Your Email"
+           required>
+
+    <br><br>
+
+    <textarea name="message"
+              placeholder="Your Message"
+              required></textarea>
+
+    <br><br>
+
+    <button type="submit">
+        Send Message
+    </button>
+
+</form>
 
 <footer>
     <p>© 2026 Sanjeeb Kumar Giri | Portfolio Website</p>

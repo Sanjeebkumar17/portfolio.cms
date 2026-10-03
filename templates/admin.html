@@ -37,6 +37,91 @@
     <br><br>
 
     <button type="submit">Add About</button>
+</form>
+
+<h2>Add Blog</h2>
+
+<form action="/add-blog-form" method="POST">
+
+    <input type="text"
+           name="title"
+           placeholder="Blog Title">
+
+    <br><br>
+
+    <textarea name="content"
+              placeholder="Blog Content"></textarea>
+
+    <br><br>
+
+    <button type="submit">Add Blog</button>
+
+</form>
+
+<h2>Add Experience</h2>
+
+<h2>Add Testimonial</h2>
+
+<h2>Add Service</h2>
+
+<form action="/add-service-form" method="POST">
+
+    <input type="text"
+           name="title"
+           placeholder="Service Title">
+
+    <br><br>
+
+    <textarea name="description"
+              placeholder="Service Description"></textarea>
+
+    <br><br>
+
+    <button type="submit">
+        Add Service
+    </button>
+
+</form>
+
+<form action="/add-testimonial-form" method="POST">
+
+    <input type="text"
+           name="name"
+           placeholder="Client Name">
+
+    <br><br>
+
+    <textarea name="feedback"
+              placeholder="Client Feedback"></textarea>
+
+    <br><br>
+
+    <button type="submit">
+        Add Testimonial
+    </button>
+
+</form>
+
+<form action="/add-experience-form" method="POST">
+
+    <input type="text"
+           name="company"
+           placeholder="Company Name">
+
+    <br><br>
+
+    <input type="text"
+           name="role"
+           placeholder="Role">
+
+    <br><br>
+
+    <textarea name="description"
+              placeholder="Experience Description"></textarea>
+
+    <br><br>
+
+    <button type="submit">Add Experience</button>
 
 </form>
 
@@ -91,3 +176,86 @@
         </li>
     {% endfor %}
 </ul>
+
+<h2>Current Blogs</h2>
+<ul>
+{% for blog in blogs %}
+<li>
+    <b>{{ blog.title }}</b><br>
+    {{ blog.content }}
+
+    <a href="/edit-blog/{{ blog.id }}">✏️ Edit</a>
+
+    <a href="/delete-blog-ui/{{ blog.id }}">🗑️ Delete</a>
+</li>
+{% endfor %}
+</ul>
+
+<h2>Current Experiences</h2>
+
+<ul>
+{% for experience in experiences %}
+<li>
+    <b>{{ experience.company }}</b><br>
+    {{ experience.role }}<br>
+    {{ experience.description }}
+
+    <a href="/edit-experience/{{ experience.id }}">✏️ Edit</a>
+
+    <a href="/delete-experience-ui/{{ experience.id }}">🗑️ Delete</a>
+</li>
+{% endfor %}
+</ul>
+
+<h2>Current Testimonials</h2>
+
+<ul>
+{% for testimonial in testimonials %}
+<li>
+    <b>{{ testimonial.name }}</b><br>
+    {{ testimonial.feedback }}
+
+    <a href="/edit-testimonial/{{ testimonial.id }}">✏️ Edit</a>
+
+    <a href="/delete-testimonial-ui/{{ testimonial.id }}">🗑️ Delete</a>
+</li>
+{% endfor %}
+</ul>
+
+<h2>Current Services</h2>
+<ul>
+{% for service in services %}
+<li>
+    <b>{{ service.title }}</b><br>
+    {{ service.description }}
+
+    <a href="/edit-service/{{ service.id }}">
+        ✏️ Edit
+    </a>
+
+    <a href="/delete-service-ui/{{ service.id }}">
+        🗑️ Delete
+    </a>
+</li>
+{% endfor %}
+</ul>
+<h2>Contact Messages</h2>
+
+<ul>
+{% for contact in contacts %}
+<li>
+    <b>Name:</b> {{ contact.name }} <br>
+    <b>Email:</b> {{ contact.email }} <br>
+    <b>Message:</b> {{ contact.message }}
+<br><br>
+
+<a href="/delete-contact-ui/{{ contact.id }}">
+    🗑️ Delete
+</a>
+</li>
+<br>
+{% endfor %}
+</ul>
+
+</body>
+</html>
